@@ -22,10 +22,11 @@ public class LinkedList<T> implements Iterable<T> {
         ListNode<T> node = new ListNode(pNode);
         if(isEmpty()) {
             this.head  = node;
-            this.tail =node;
+            this.tail =head; //en este caso cabeza y cola son el mismo elemento
             len++;
         }
         else{
+            //se añade al final de la lista
             this.tail.next=node;
             this.tail = this.tail.next;
             len++;
@@ -39,11 +40,11 @@ public class LinkedList<T> implements Iterable<T> {
         return delete;
     }
     
-    public ListNode<T> get(int pIndex){
+    public T get(int pIndex){
         if(pIndex<0 || pIndex >=  this.len) throw new IndexOutOfBoundsException("Posicion no valida");
-        ListNode<T> node= this.head;
+        ListNode node= this.head;
         for (int i = 0; i < pIndex; i++) node = node.next;
-        return  node;
+        return  (T) node.data;
     }
     
     public int indexOf(Object pNode){
@@ -61,14 +62,14 @@ public class LinkedList<T> implements Iterable<T> {
 
          return -1;
     }
-    
-    public void insert(ListNode<T> pNode, int pIndex){
+    //puede ser el metodo add(nodo,int)????
+    public void insert(Object pNode, int pIndex){
         if(pIndex<0 || pIndex >=  this.len) throw new IndexOutOfBoundsException("Posicion no valida");
         //TODO;
-        ListNode<T> nodo= get(pIndex);
-        ListNode<T> newNodo = pNode;
-        nodo.prev=newNodo;
-        newNodo.setNext(nodo);
+        ListNode<T> nodo= (ListNode<T>) get(pIndex);
+        Object newNodo = pNode;
+        nodo.prev=(ListNode<T>) newNodo;
+//        newNodo.setNext(nodo);
         add(newNodo);
     }
     
@@ -88,27 +89,26 @@ public class LinkedList<T> implements Iterable<T> {
             }
             @Override
             public T next(){
-                return (T) get(posNextElem);
+                return (T) get(posNextElem++);
             }
         };
     }
     
-    public Object remove(int pIndex){
+    public T remove(int pIndex){
         //TODO;
         if(pIndex<0||pIndex>=this.len) throw new IndexOutOfBoundsException("Posicion no valida");
         len--;
-        return this.head;
+        return this.head.getData();
     }
     
     public int size(){
         return this.len;
     }
     
-    public Object set(int pIndex, Object pNodo){
+    public void set(int pIndex, T pNodo){
         if(pIndex<0||pIndex>=this.len) throw new IndexOutOfBoundsException("Posicion no valida" );
-        ListNode nodo = get(pIndex);
+        ListNode<T> nodo = (ListNode<T>) get(pIndex);
         nodo.setData(pNodo);
-        return nodo;
     }
     
     @Override
@@ -121,7 +121,7 @@ public class LinkedList<T> implements Iterable<T> {
         return toStr + " ]";
     }
     
-    public class ListNode<T> {
+    private class ListNode<T> {
         private  T data;
         private ListNode<T> next;
         private ListNode<T> prev;
@@ -142,11 +142,11 @@ public class LinkedList<T> implements Iterable<T> {
         public ListNode<T> getPrev(){
             return this.prev;
         }
-        public void setNext(ListNode<T> pListNext){
-            this.next=pListNext;
+        public void setNext(T pListNext){
+            this.next=(ListNode<T>) pListNext;
         }
-        public void setPrev(ListNode<T> pListPrev){
-            this.prev= pListPrev;
+        public void setPrev(T pListPrev){
+            this.prev= (ListNode<T>)  pListPrev;
         }
         //se sobreescribe equals para usarlo en indexOf        
         @Override
